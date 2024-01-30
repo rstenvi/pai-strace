@@ -1,0 +1,26 @@
+[package]
+name = "pai-strace"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+# Tracing engine
+pai = { version = "0.1", git = "https://github.com/rstenvi/pai", features = ["syscalls"] }
+
+# Argument parsing
+clap = { version = "4", features = ["derive"] }
+clap-verbosity-flag = { version = "2" }
+
+# Error handling
+anyhow = "1"
+
+# Logging
+log = {version = "0.4", features = ["release_max_level_info"]}
+pretty_env_logger = { version = "0.4" }
+
+# Write syscalls as structured JSON
+struson = { version = "0.4", features = ["serde"]}
+serde = { version = "1", features = ["derive"]}
