@@ -138,4 +138,3 @@ pub struct Args {
 	#[arg(trailing_var_arg = true, allow_hyphen_values = true)]
 	pub args: Vec<String>,
 }
-

@@ -1,19 +1,17 @@
 mod args;
-mod writers;
 mod state;
+mod writers;
 
-
+use crate::args::{Args, Enrich, Filter};
+use anyhow::{Error, Result};
 use clap::Parser;
-use anyhow::{Result, Error};
 use pai::api::ArgsBuilder;
 use pai::ctx;
 use pai::syscalls::Direction;
 use pai::trace::Stop;
-use crate::args::{Args, Filter, Enrich};
 
 use crate::state::State;
 use crate::writers::RawSyscall;
-
 
 fn main() -> Result<()> {
 	let mut args = Args::parse();
@@ -56,7 +54,6 @@ fn main() -> Result<()> {
 
 	// Start building our config based on the arguments
 	let mut conf = ArgsBuilder::new();
-	
 
 	// First we setup all handler
 	let sec = ctx.secondary_mut();
@@ -107,7 +104,6 @@ fn main() -> Result<()> {
 			Ok(())
 		})?;
 	}
-
 
 	// All interactions which require a Client
 	let client = ctx.secondary_mut().client_mut();

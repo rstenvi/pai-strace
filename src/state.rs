@@ -3,7 +3,10 @@ use std::{collections::HashMap, fs::File, io::Write, path::PathBuf};
 use pai::{api::messages::Event, syscalls::SyscallItem, trace::Stopped, utils::process::Tid};
 use struson::writer::JsonStreamWriter;
 
-use crate::{args::{Args, Format}, writers::{RawSyscall, SysWrite, WriteJson, WriteRaw}};
+use crate::{
+	args::{Args, Format},
+	writers::{RawSyscall, SysWrite, WriteJson, WriteRaw},
+};
 
 macro_rules! gen_write_func {
 	($name:ident, $arg:ident) => {
@@ -59,7 +62,6 @@ impl State {
 					Box::new(WriteRaw::new(writer)) as Box<dyn SysWrite>
 				}
 			};
-			log::error!("got writer");
 			ins.init()?;
 			writers.insert(format.clone(), ins);
 		}

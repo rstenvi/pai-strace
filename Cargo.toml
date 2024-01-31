@@ -1,6 +1,6 @@
 [package]
 name = "pai-strace"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 license-file = "LICENSE"
 description = "A strace-like tool created using pai"
@@ -34,3 +34,4 @@ serde = { version = "1", features = ["derive"]}
 
 # Check if we are the newest version
 check-latest = "1.0.2"
+
