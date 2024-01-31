@@ -119,6 +119,9 @@ pub struct Args {
 	#[arg(long)]
 	pub panic_on_oops: bool,
 
+	#[arg(long)]
+	pub check_update: bool,
+
 	/// Enrich syscall data with more details about what the arguments are
 	/// [None|Basic|Full].
 	#[arg(long, default_value_t = Enrich::default())]

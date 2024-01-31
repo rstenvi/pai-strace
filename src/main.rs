@@ -22,6 +22,16 @@ fn main() -> Result<()> {
 		.init();
 
 	log::info!("pai-strace started");
+	if args.check_update {
+		if let Ok(Some(version)) = check_latest::check_max!() {
+			let msg = format!("version {version} is now available!");
+			log::warn!("{msg}");
+			log::warn!("update with 'cargo install --force pai-strace'");
+			return Err(Error::msg(msg));
+		} else {
+			log::debug!("already running newest version");
+		}
+	}
 
 	// Some sanity checking on the arguments.
 	if args.only_print != Filter::None && args.enrich == Enrich::None {
@@ -118,7 +128,8 @@ fn main() -> Result<()> {
 	client.set_config(conf)?;
 
 	// We're all good and can just loop until program exits or we're detached.
-	let mut data = ctx.loop_until_exit()?;
+	let (rsp, mut data) = ctx.loop_until_exit()?;
+	log::debug!("final response {rsp:?}");
 	data.finish()?;
 	log::info!("done");
 	Ok(())

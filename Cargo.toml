@@ -15,7 +15,7 @@ keywords = ["strace", "trace", "syscall"]
 [dependencies]
 
 # Tracing engine
-pai = { version = "0.1", features = ["syscalls"] }
+pai = { version = "0.1", git = "https://github.com/rstenvi/pai", features = ["syscalls"] }
 
 # Argument parsing
 clap = { version = "4", features = ["derive"] }
@@ -31,3 +31,6 @@ pretty_env_logger = { version = "0.4" }
 # Write syscalls as structured JSON
 struson = { version = "0.4", features = ["serde"]}
 serde = { version = "1", features = ["derive"]}
+
+# Check if we are the newest version
+check-latest = "1.0.2"
