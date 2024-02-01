@@ -701,7 +701,7 @@ checksum = "13e3bf6590cbc649f4d1a3eefc9d5d6eb746f5200ffb04e5e142700b8faa56e7"
 [[package]]
 name = "libc"
 version = "0.2.152"
-source = "git+https://github.com/rstenvi/libc?branch=libc-0.2#95d49b255e6f6550956963d428dfa793c61d8af8"
+source = "git+https://github.com/rstenvi/libc?branch=libc-0.2#1ade45a3fb24d720dafeadf9ecfc24b8842d7aa4"
 
 [[package]]
 name = "linux-raw-sys"
@@ -836,7 +836,7 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 [[package]]
 name = "pai"
 version = "0.1.5"
-source = "git+https://github.com/rstenvi/pai#997e5e540cf22bfbf7ae0550a59c9efd79f1a5d5"
+source = "git+https://github.com/rstenvi/pai#b63e11a45a4ba18b2865b67e44a0f37caa014833"
 dependencies = [
  "anyhow",
  "bit-vec",
@@ -894,10 +894,9 @@ checksum = "e3148f5046208a5d56bcfc03053e3ca6334e51da8dfb19b6cdc8b306fae3283e"
 [[package]]
 name = "pete"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f09c1c1ad40df294ff8643fe88a3dc64fff3293b6bc0ed9f71aff71f7086cbd"
+source = "git+https://github.com/rstenvi/pete#eeb19005481a2fc2e2b51f759d35ee50217e146c"
 dependencies = [
- "libc 0.2.152 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.152 (git+https://github.com/rstenvi/libc?branch=libc-0.2)",
  "memoffset 0.8.0",
  "nix 0.26.4",
  "thiserror",
