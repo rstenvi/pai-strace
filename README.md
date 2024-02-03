@@ -17,53 +17,22 @@ pai-strace --check-update
 
 In development, expect some bugs.
 
-## Cross-compile
+## Compile
 
-Cross-compilation depends on having a host linker for the given architecture.
-Some linkers for some architectures have been set up in `.cargo/config.toml`.
-Depending on you configuration, you might need to make some changes.
+[cargo-make](https://github.com/sagiegurari/cargo-make) is used to control the
+build process. [cross](https://github.com/cross-rs/cross) is used to support
+cross-compilation. To simplify the build process, `cross` is used even when
+compiling for host target.
 
-Below are some targets that can be built, and notes about building them:
-
-**x86_64-linux-gnu**
-
-Should work out of the box
+The command to build targets are:
 
 ~~~
-cargo build --target=x86_64-unknown-linux-gnu
+cargo make [build|release] [target(s)]
 ~~~
 
-**aarch64-linux-gnu**
+The output will be placed in `output/<target>/<debug|release>/pai-strace`
 
-Need to install aarch64 cross-compiler, this can be installed from `apt` if you're on Ubuntu (`gcc-aarch64-linux-gnu`).
-
-~~~
-cargo build --target=aarch64-unknown-linux-gnu
-~~~
-
-**aarch64-linux-android**
-
-You need to first install Android Native Development Kit (NDK). This will give you a `clang` compiler for various API levels, `.carg/config.toml` tries to use level 34.
-
-`cargo` also looks for `ar` at `aarch64-linux-android-ar`. This is not included in NDK, but can be faked with:
-
-~~~
-ln -s /path/to/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar /dir/in/path/aarch64-linux-android-ar
-~~~
-
-Final build command:
-
-~~~
-cargo build --target=aarch64-linux-android
-~~~
-
-**x86_64-linux-android**
-
-See notes for `aarch64-linux-android`
-
-~~~
-cargo build --target=x86_64-linux-android
-~~~
+If you don't specify any target it will be under `output/<debug|release>/pai-strace`
 
 ## How to use
 

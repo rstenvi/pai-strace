@@ -1,0 +1,7 @@
+[tasks.build]
+command = "cross"
+args = ["build", "--target-dir=output", "--target=${@}"]
+
+[tasks.release]
+command = "cross"
+args = ["build", "--target-dir=output", "--release", "--target=${@}"]
