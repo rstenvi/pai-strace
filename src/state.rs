@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fs::File, io::Write, path::PathBuf};
 
-use pai::{api::messages::Event, syscalls::SyscallItem, trace::Stopped, utils::process::Tid};
+use pai::{api::messages::{Event, Stopped}, syscalls::SyscallItem, utils::process::Tid};
 use struson::writer::JsonStreamWriter;
 
 use crate::{

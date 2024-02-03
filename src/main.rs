@@ -5,10 +5,10 @@ mod writers;
 use crate::args::{Args, Enrich, Filter};
 use anyhow::{Error, Result};
 use clap::Parser;
+use pai::api::messages::Stop;
 use pai::api::ArgsBuilder;
 use pai::ctx;
 use pai::syscalls::Direction;
-use pai::trace::Stop;
 
 use crate::state::State;
 use crate::writers::RawSyscall;
@@ -50,7 +50,7 @@ fn main() -> Result<()> {
 	}
 
 	// Get main context object
-	let mut ctx = ctx::Main::get_new(args.attach, cargs, state)?;
+	let mut ctx = ctx::Main::new_main(args.attach, cargs, state)?;
 
 	// Start building our config based on the arguments
 	let mut conf = ArgsBuilder::new();
@@ -102,7 +102,7 @@ fn main() -> Result<()> {
 				}
 			}
 			Ok(())
-		})?;
+		});
 	}
 
 	// All interactions which require a Client
