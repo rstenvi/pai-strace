@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use clap::Parser;
+use pai::api::args::Enrich;
 
 #[derive(Debug, Clone, Default, Eq, PartialEq)]
 pub enum Filter {
@@ -22,31 +23,6 @@ impl std::str::FromStr for Filter {
 	}
 }
 impl std::fmt::Display for Filter {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		f.write_fmt(format_args!("{:?}", self))
-	}
-}
-
-#[derive(Default, Debug, Clone, Eq, PartialEq)]
-pub enum Enrich {
-	#[default]
-	None,
-	Basic,
-	Full,
-}
-impl std::str::FromStr for Enrich {
-	type Err = pai::Error;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		match s.to_lowercase().as_str() {
-			"none" => Ok(Self::None),
-			"basic" => Ok(Self::Basic),
-			"full" => Ok(Self::Full),
-			_ => Err(pai::Error::NotFound),
-		}
-	}
-}
-impl std::fmt::Display for Enrich {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		f.write_fmt(format_args!("{:?}", self))
 	}

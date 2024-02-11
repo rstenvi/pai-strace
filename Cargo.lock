@@ -836,7 +836,7 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 [[package]]
 name = "pai"
 version = "0.1.5"
-source = "git+https://github.com/rstenvi/pai#8e4cf974529a73d4a7485052819a37411f5517bc"
+source = "git+https://github.com/rstenvi/pai#c19908cfc60c5f9392f0aca3e834e7b9b51ed50b"
 dependencies = [
  "anyhow",
  "bit-vec",

@@ -2,13 +2,13 @@ mod args;
 mod state;
 mod writers;
 
-use crate::args::{Args, Enrich, Filter};
+use crate::args::{Args, Filter};
 use anyhow::{Error, Result};
 use clap::Parser;
+use pai::api::args::Enrich;
 use pai::api::messages::Stop;
 use pai::api::ArgsBuilder;
 use pai::ctx;
-use pai::syscalls::Direction;
 
 use crate::state::State;
 use crate::writers::RawSyscall;
@@ -84,14 +84,9 @@ fn main() -> Result<()> {
 		});
 	} else {
 		conf = conf.transform_syscalls();
-		sec.set_generic_syscall_handler(|cl, mut sys| {
+		conf = conf.enrich_default(args.enrich);
+		sec.set_generic_syscall_handler(|cl, sys| {
 			if sys.is_exit() {
-				let enrich = cl.data().args.enrich.clone();
-				match enrich {
-					Enrich::None => {}
-					Enrich::Basic => sys.enrich_values()?,
-					Enrich::Full => sys.parse_deep(sys.tid, cl.client_mut(), Direction::InOut)?,
-				}
 				let shouldprint = match cl.data().args.only_print {
 					Filter::None => true,
 					Filter::Success => sys.has_succeeded(),
