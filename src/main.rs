@@ -50,7 +50,7 @@ fn main() -> Result<()> {
 	}
 
 	// Get main context object
-	let mut ctx = ctx::Main::new_main(args.attach, cargs, state)?;
+	let mut ctx: ctx::Main<State, anyhow::Error> = ctx::Main::new_main(args.attach, cargs, state)?;
 
 	// Start building our config based on the arguments
 	let mut conf = ArgsBuilder::new();
@@ -90,7 +90,7 @@ fn main() -> Result<()> {
 				match enrich {
 					Enrich::None => {}
 					Enrich::Basic => sys.enrich_values()?,
-					Enrich::Full => sys.parse_deep(sys.tid, cl, Direction::InOut)?,
+					Enrich::Full => sys.parse_deep(sys.tid, cl.client_mut(), Direction::InOut)?,
 				}
 				let shouldprint = match cl.data().args.only_print {
 					Filter::None => true,

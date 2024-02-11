@@ -4,4 +4,9 @@ args = ["build", "--target-dir=output", "--target=${@}"]
 
 [tasks.release]
 command = "cross"
-args = ["build", "--target-dir=output", "--release", "--target=${@}"]
+dependencies = ["update"]
+args = ["build", "--frozen", "--target-dir=output", "--release", "--target=${@}"]
+
+[tasks.update]
+command = "cargo"
+args = ["update"]
