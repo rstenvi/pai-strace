@@ -6,7 +6,7 @@ use crate::args::{Args, Filter};
 use anyhow::{Error, Result};
 use clap::Parser;
 use pai::api::args::Enrich;
-use pai::api::messages::Stop;
+use pai::api::messages::{CbAction, Stop};
 use pai::api::ArgsBuilder;
 use pai::ctx;
 
@@ -85,18 +85,16 @@ fn main() -> Result<()> {
 	} else {
 		conf = conf.transform_syscalls();
 		conf = conf.enrich_default(args.enrich);
-		sec.set_generic_syscall_handler(|cl, sys| {
-			if sys.is_exit() {
-				let shouldprint = match cl.data().args.only_print {
-					Filter::None => true,
-					Filter::Success => sys.has_succeeded(),
-					Filter::Fail => sys.has_failed(),
-				};
-				if shouldprint {
-					cl.data_mut().write_syscall(sys.tid, &sys)?;
-				}
+		sec.set_generic_syscall_handler_exit(|cl, sys| {
+			let shouldprint = match cl.data().args.only_print {
+				Filter::None => true,
+				Filter::Success => sys.has_succeeded(),
+				Filter::Fail => sys.has_failed(),
+			};
+			if shouldprint {
+				cl.data_mut().write_syscall(sys.tid, &sys)?;
 			}
-			Ok(())
+			Ok(CbAction::None)
 		});
 	}
 

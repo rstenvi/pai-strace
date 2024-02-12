@@ -1,6 +1,10 @@
 use std::io::Write;
 
-use pai::{api::messages::{Event, Stopped}, syscalls::SyscallItem, utils::process::Tid};
+use pai::{
+	api::messages::{Event, Stopped},
+	syscalls::SyscallItem,
+	utils::process::Tid,
+};
 use serde::{Deserialize, Serialize};
 use struson::writer::JsonWriter;
 
