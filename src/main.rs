@@ -7,7 +7,6 @@ use anyhow::{Error, Result};
 use clap::Parser;
 use pai::api::args::Enrich;
 use pai::api::messages::{CbAction, Stop};
-use pai::api::ArgsBuilder;
 use pai::ctx;
 
 use crate::state::State;
@@ -52,9 +51,6 @@ fn main() -> Result<()> {
 	// Get main context object
 	let mut ctx: ctx::Main<State, anyhow::Error> = ctx::Main::new_main(args.attach, cargs, state)?;
 
-	// Start building our config based on the arguments
-	let mut conf = ArgsBuilder::new();
-
 	// First we setup all handler
 	let sec = ctx.secondary_mut();
 	sec.set_event_handler(|cl, evt| {
@@ -83,8 +79,7 @@ fn main() -> Result<()> {
 			Ok(())
 		});
 	} else {
-		conf = conf.transform_syscalls();
-		conf = conf.enrich_default(args.enrich);
+		sec.enrich_syscalls(args.enrich);
 		sec.set_generic_syscall_handler_exit(|cl, sys| {
 			let shouldprint = match cl.data().args.only_print {
 				Filter::None => true,
@@ -98,23 +93,16 @@ fn main() -> Result<()> {
 		});
 	}
 
-	// All interactions which require a Client
-	let client = ctx.secondary_mut().client_mut();
-
 	// Whether we should print some or all syscalls
 	if let Some(filter) = &args.filter {
+		let mut conf = sec.take_args_builder();
+		conf.set_intercept_all_syscalls(false);
 		for part in filter.split(',') {
-			let sysno = client.resolve_syscall(part)?;
+			let sysno = sec.client_mut().resolve_syscall(part)?;
 			conf = conf.push_syscall_traced(sysno);
 		}
-	} else {
-		conf = conf.intercept_all_syscalls();
+		sec.set_args_builder(conf);
 	}
-
-	// Finish up config and set it
-	let conf = conf.finish()?;
-	log::debug!("config {conf:?}");
-	client.set_config(conf)?;
 
 	// We're all good and can just loop until program exits or we're detached.
 	let (rsp, mut data) = ctx.loop_until_exit()?;
