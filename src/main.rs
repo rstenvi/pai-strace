@@ -43,13 +43,15 @@ fn main() -> Result<()> {
 		}
 	}
 	let state = State::new(args.clone())?;
-	let cargs = std::mem::take(&mut args.args);
+	let mut cargs = std::mem::take(&mut args.args);
 	if cargs.is_empty() {
 		return Err(Error::msg("no argument supplied, read help"));
 	}
 
 	// Get main context object
-	let mut ctx: ctx::Main<State, anyhow::Error> = ctx::Main::new_main(args.attach, cargs, state)?;
+	let prog = cargs.remove(0);
+	let mut ctx: ctx::Main<State, anyhow::Error> =
+		ctx::Main::new_main(args.attach, prog, cargs, state)?;
 
 	// First we setup all handler
 	let sec = ctx.secondary_mut();
