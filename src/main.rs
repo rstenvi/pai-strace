@@ -6,7 +6,7 @@ use crate::args::{Args, Filter};
 use anyhow::{Error, Result};
 use clap::Parser;
 use pai::api::args::Enrich;
-use pai::api::messages::{CbAction, Stop};
+use pai::api::messages::{CbAction, RegEvent, Stop};
 use pai::ctx;
 
 use crate::state::State;
@@ -103,6 +103,12 @@ fn main() -> Result<()> {
 			let sysno = sec.client_mut().resolve_syscall(part)?;
 			conf = conf.push_syscall_traced(sysno);
 		}
+		sec.set_args_builder(conf);
+	}
+
+	if !args.follow_childs {
+		let mut conf = sec.take_args_builder();
+		conf.add_registered(RegEvent::Attached);
 		sec.set_args_builder(conf);
 	}
 

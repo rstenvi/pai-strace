@@ -70,10 +70,6 @@ pub struct Args {
 	#[arg(long)]
 	pub follow_childs: bool,
 
-	/// Attach to any new forked processes
-	#[arg(short, long)]
-	pub follow_forks: bool,
-
 	/// Only useful if output has been set, will create a new file per thread
 	#[arg(long)]
 	pub file_per_thread: bool,

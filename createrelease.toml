@@ -27,7 +27,7 @@ run_task = "createrelease"
 
 [tasks.post-releases]
 script = """
-OUT="output/release/${CARGO_MAKE_PROJECT_VERSION}"
+OUT="release/${CARGO_MAKE_PROJECT_VERSION}"
 mkdir -p ${OUT};
 ls output/ | while read line; do
 	if test -d output/$line && test -f "output/${line}/release/pai-strace"; then
