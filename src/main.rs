@@ -89,7 +89,7 @@ fn main() -> Result<()> {
 				Filter::Fail => sys.has_failed(),
 			};
 			if shouldprint {
-				cl.data_mut().write_syscall(sys.tid, &sys)?;
+				cl.data_mut().write_syscall(sys.tid, sys)?;
 			}
 			Ok(CbAction::None)
 		});

@@ -1,0 +1,49 @@
+[tasks.createrelease]
+condition = { env_set = ["TARGET"], fail_message = "target not specified" } 
+command = "cross"
+
+# We could potentially use @@ßplit here to run make on all targets, but the
+# build will then sometimes fail and I'm not sure why. More reliable to always
+# run them as separate commands.
+
+#args = ["build", "--frozen", "--target-dir=output", "--release", "@@split(TARGET,|)"]
+args = ["build", "--frozen", "--target-dir=output", "--release", "--target=${TARGET}"]
+
+[tasks.release1]
+env = { TARGET = ["x86_64-unknown-linux-gnu"] }
+run_task = "createrelease"
+
+[tasks.release2]
+env = { TARGET = "aarch64-unknown-linux-gnu" }
+run_task = "createrelease"
+
+[tasks.release3]
+env = { TARGET = "aarch64-linux-android" }
+run_task = "createrelease"
+
+[tasks.release4]
+env = { TARGET = "x86_64-linux-android" }
+run_task = "createrelease"
+
+[tasks.post-releases]
+script = """
+OUT="output/release/${CARGO_MAKE_PROJECT_VERSION}"
+mkdir -p ${OUT};
+ls output/ | while read line; do
+	if test -d output/$line && test -f "output/${line}/release/pai-strace"; then
+		echo $line;
+		if test -f ${OUT}/pai-strace-${line}-${CARGO_MAKE_PROJECT_VERSION}.zip; then
+			rm -f  ${OUT}/pai-strace-${line}-${CARGO_MAKE_PROJECT_VERSION}.zip;
+		fi
+		zip -j ${OUT}/pai-strace-${line}-${CARGO_MAKE_PROJECT_VERSION}.zip output/${line}/release/pai-strace
+	fi;
+done
+"""
+
+[tasks.releases]
+run_task = [
+    { name = ["release1", "release3", "release3", "release4", "post-releases"] },
+]
+
+[tasks.createzips]
+run_task = "releases"

@@ -9,6 +9,11 @@ homepage = "https://github.com/rstenvi/pai-strace"
 repository = "https://github.com/rstenvi/pai-strace"
 keywords = ["strace", "trace", "syscall"]
 
+[profile.release]
+strip = "debuginfo"
+lto = true
+debug-assertions = false
+opt-level = 3
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

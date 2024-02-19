@@ -34,6 +34,23 @@ The output will be placed in `output/<target>/<debug|release>/pai-strace`
 
 If you don't specify any target it will be under `output/<debug|release>/pai-strace`
 
+**Some other useful make targets**
+
+- `cargo make clippy`
+  -  Should be run before every commit
+- `cargo make publish`
+  - Publish new version on crates.io
+- `cargo make release [target1 target2 targetN]`
+  - Build release version for given targets
+- `cargo make releasecheck`
+  - Run dependencies for `publish` and `release` targets without releasing or
+    publishing anything.
+  - Will not run with uncommited changes so not necessary to run this before
+    commit
+- `cargo make update`
+  - Update all dependencies in `Cargo.lock`
+  - This is part of `releasecheck`
+
 ## How to use
 
 See `--help` for more commands, but below are some examples, each one simply
