@@ -28,7 +28,7 @@ dependencies = [
 	{ name = "createzips", path = "createrelease.toml" },
 ]
 command = "gh"
-args = [ "release", "create", "v${CARGO_MAKE_PROJECT_VERSION}", "./output/release/${CARGO_MAKE_PROJECT_VERSION}/*.zip" ]
+args = [ "release", "create", "v${CARGO_MAKE_PROJECT_VERSION}", "./release/${CARGO_MAKE_PROJECT_VERSION}/*.zip" ]
 
 
 [tasks.update]
