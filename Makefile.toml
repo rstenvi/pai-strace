@@ -2,6 +2,12 @@
 command = "cross"
 args = ["build", "--target-dir=output", "--target=${@}"]
 
+[tasks.release]
+command = "cross"
+dependencies = ["update"]
+args = ["build", "--frozen", "--target-dir=output", "--release", "--target=${@}"]
+
+
 [tasks.fixfmt]
 install_crate = "rustfmt"
 command = "cargo"
