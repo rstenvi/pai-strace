@@ -1,6 +1,6 @@
 [package]
 name = "pai-strace"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 license-file = "LICENSE"
 description = "A strace-like tool created using pai"
@@ -20,6 +20,7 @@ opt-level = 3
 [dependencies]
 
 # Tracing engine
+# pai = { version = "0.1", features = ["syscalls"] }
 pai = { version = "0.1", git = "https://github.com/rstenvi/pai", features = ["syscalls"] }
 
 # Use for local testing
