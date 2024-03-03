@@ -23,7 +23,7 @@ opt-level = 3
 pai = { version = "0.1", git = "https://github.com/rstenvi/pai", features = ["syscalls"] }
 
 # Use for local testing
-# pai = { version = "0.1", path = "../pai", features = ["syscalls"] }
+# pai = { path = "../pai", features = ["syscalls"] }
 
 # Argument parsing
 clap = { version = "4", features = ["derive"] }
@@ -34,7 +34,7 @@ anyhow = "1"
 
 # Logging
 log = {version = "0.4", features = ["release_max_level_info"]}
-pretty_env_logger = { version = "0.4" }
+pretty_env_logger = { version = "0.5" }
 
 # Write syscalls as structured JSON
 struson = { version = "0.4", features = ["serde"]}

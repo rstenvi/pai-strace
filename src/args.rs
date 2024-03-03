@@ -70,43 +70,108 @@ pub struct Args {
 	#[arg(long)]
 	pub follow_childs: bool,
 
-	/// Only useful if output has been set, will create a new file per thread
+	/// Create a new file per thread. Only useful if output has been set.
 	#[arg(long)]
 	pub file_per_thread: bool,
 
-	/// Only trace this comma-separeted list of system calls
+	/// Include syscall entry, default is to collect output and only print when
+	/// exit is finished.
 	#[arg(long)]
+	pub include_entry: bool,
+
+	/// Only trace this comma-separeted list of system calls
+	#[arg(long, verbatim_doc_comment)]
 	pub filter: Option<String>,
 
-	/// Only report syscall enter and exit, you don't need this
-	#[arg(long)]
+	/// Only report syscall enter and exit. You likely don't want to use this.
+	#[arg(long, verbatim_doc_comment)]
 	pub raw_mode: bool,
 
+	/// Unstable
 	#[arg(long)]
 	pub print_stops: bool,
 
+	/// Unstable
 	#[arg(long)]
 	pub print_events: bool,
 
-	#[arg(long)]
+	/// On startup we check for likely erroneous parameters. Default behaviour
+	/// is to log a warning and continue. With this flag, program abort with
+	/// error.
+	#[arg(long, verbatim_doc_comment)]
 	pub panic_on_oops: bool,
 
-	#[arg(long)]
+	/// Check for update when starting and exit if this is not the newest
+	/// version.
+	#[arg(long, verbatim_doc_comment)]
 	pub check_update: bool,
+
+	/// Fix ioctl() calls with added information about what `arg` argument
+	/// points to based on the value of `cmd`. This parsing is based on the data
+	/// we've parsed from Syzkaller and is best-effort.
+	#[arg(long, verbatim_doc_comment)]
+	pub fix_ioctl_arg: bool,
 
 	/// Enrich syscall data with more details about what the arguments are
 	/// [None|Basic|Full].
-	#[arg(long, default_value_t = Enrich::default())]
+	#[arg(short, long, default_value_t = Enrich::default(), verbatim_doc_comment)]
 	pub enrich: Enrich,
 
 	/// Only print, depending on outcome of syscall
-	#[arg(long, default_value_t = Filter::default())]
+	#[arg(long, default_value_t = Filter::default(), verbatim_doc_comment)]
 	pub only_print: Filter,
 
-	#[arg(long, default_values_t = [Format::default()])]
+	/// Format for output, Raw or Json
+	#[arg(long, default_values_t = [Format::default()], verbatim_doc_comment)]
 	pub format: Vec<Format>,
 
 	/// Program to attach to, program to start, etc
-	#[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+	#[arg(trailing_var_arg = true, allow_hyphen_values = true, verbatim_doc_comment)]
 	pub args: Vec<String>,
+}
+
+impl Args {
+	pub fn init(&self) -> anyhow::Result<()> {
+		if self.check_update {
+			if let Ok(Some(version)) = check_latest::check_max!() {
+				let msg = format!("version {version} is now available!");
+				log::warn!("{msg}");
+				log::warn!("update with 'cargo install --force pai-strace'");
+				Err(anyhow::Error::msg(msg))
+			} else {
+				log::debug!("already running newest version");
+				Ok(())
+			}
+		} else {
+			Ok(())
+		}
+	}
+	/// A series of tests which may result in undesireable behaviour
+	pub fn sanity_check(&self) -> anyhow::Result<()> {
+		let mut oops = false;
+		if let Some(first) = self.args.first() {
+			if first.starts_with('-') {
+				log::warn!("target starts with '-' '{first:?}: you probably passed an invalid argument");
+				oops = true;
+			}
+		} else {
+			// We cannot set `required` on `args` in clap because no argument is
+			// valid in some cases, but not by the time we get here.
+			log::warn!("no target supplied");
+			return Err(anyhow::Error::msg("Exiting because of inconsistent arguments"));
+		}
+		if self.attach && self.args.len() > 1 {
+			log::warn!("only the first argument will be parsed when attaching, you provided multiple: {:?}", self.args);
+			oops = true;
+		}
+		if self.only_print != Filter::None && self.enrich == Enrich::None {
+			log::warn!("to filter on syscall result, you must enrich data with at least '{:?}'",Enrich::Basic);
+			oops = true;
+		}
+		if oops && self.panic_on_oops {
+			Err(anyhow::Error::msg("Exiting because of inconsistent arguments"))
+		} else {
+			Ok(())
+		}
+	}
 }
