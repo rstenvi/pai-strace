@@ -59,23 +59,24 @@ fn main() -> Result<()> {
 	} else {
 		sec.enrich_syscalls(args.enrich);
 		sec.set_generic_syscall_handler(
-		|cl, sys| {
+			|cl, sys| {
 				if cl.data().args.include_entry {
 					cl.data_mut().write_syscall(sys.tid, sys)?;
 				}
 				Ok(CbAction::None)
 			},
-		|cl, sys| {
-			let shouldprint = match cl.data().args.only_print {
-				Filter::None => true,
-				Filter::Success => sys.has_succeeded(),
-				Filter::Fail => sys.has_failed(),
-			};
-			if shouldprint {
-				cl.data_mut().write_syscall(sys.tid, sys)?;
-			}
-			Ok(CbAction::None)
-		});
+			|cl, sys| {
+				let shouldprint = match cl.data().args.only_print {
+					Filter::None => true,
+					Filter::Success => sys.has_succeeded(),
+					Filter::Fail => sys.has_failed(),
+				};
+				if shouldprint {
+					cl.data_mut().write_syscall(sys.tid, sys)?;
+				}
+				Ok(CbAction::None)
+			},
+		);
 	}
 
 	if let Some(filter) = &args.filter {

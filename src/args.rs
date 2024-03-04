@@ -126,7 +126,11 @@ pub struct Args {
 	pub format: Vec<Format>,
 
 	/// Program to attach to, program to start, etc
-	#[arg(trailing_var_arg = true, allow_hyphen_values = true, verbatim_doc_comment)]
+	#[arg(
+		trailing_var_arg = true,
+		allow_hyphen_values = true,
+		verbatim_doc_comment
+	)]
 	pub args: Vec<String>,
 }
 
@@ -151,25 +155,34 @@ impl Args {
 		let mut oops = false;
 		if let Some(first) = self.args.first() {
 			if first.starts_with('-') {
-				log::warn!("target starts with '-' '{first:?}: you probably passed an invalid argument");
+				log::warn!(
+					"target starts with '-' '{first:?}: you probably passed an invalid argument"
+				);
 				oops = true;
 			}
 		} else {
 			// We cannot set `required` on `args` in clap because no argument is
 			// valid in some cases, but not by the time we get here.
 			log::warn!("no target supplied");
-			return Err(anyhow::Error::msg("Exiting because of inconsistent arguments"));
+			return Err(anyhow::Error::msg(
+				"Exiting because of inconsistent arguments",
+			));
 		}
 		if self.attach && self.args.len() > 1 {
 			log::warn!("only the first argument will be parsed when attaching, you provided multiple: {:?}", self.args);
 			oops = true;
 		}
 		if self.only_print != Filter::None && self.enrich == Enrich::None {
-			log::warn!("to filter on syscall result, you must enrich data with at least '{:?}'",Enrich::Basic);
+			log::warn!(
+				"to filter on syscall result, you must enrich data with at least '{:?}'",
+				Enrich::Basic
+			);
 			oops = true;
 		}
 		if oops && self.panic_on_oops {
-			Err(anyhow::Error::msg("Exiting because of inconsistent arguments"))
+			Err(anyhow::Error::msg(
+				"Exiting because of inconsistent arguments",
+			))
 		} else {
 			Ok(())
 		}
