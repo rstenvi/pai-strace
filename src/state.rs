@@ -1,8 +1,7 @@
 use std::{collections::HashMap, fs::File, io::Write, path::PathBuf};
 
 use pai::{
-	api::messages::{Event, Stopped},
-	syscalls::SyscallItem,
+	api::messages::{Event, Stopped, SyscallItem},
 	utils::process::Tid,
 };
 use struson::writer::JsonStreamWriter;

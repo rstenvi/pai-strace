@@ -828,7 +828,7 @@ checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 [[package]]
 name = "pai"
 version = "0.1.10"
-source = "git+https://github.com/rstenvi/pai#434af68828c7af0a932d345b8f63c40aa1bc6d95"
+source = "git+https://github.com/rstenvi/pai#7e65d6737b94887b6a3eb3be192ebab1d3d4fea0"
 dependencies = [
  "anyhow",
  "bit-vec",
@@ -1021,9 +1021,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.5"
+version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5bb987efffd3c6d0d8f5f89510bb458559eab11e4f869acb20bf845e016259cd"
+checksum = "86b83b8b9847f9bf95ef68afb0b8e6cdb80f498442f5179a29fad448fcc1eaea"
 dependencies = [
  "aho-corasick",
  "memchr",

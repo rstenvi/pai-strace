@@ -1,8 +1,7 @@
 use std::io::Write;
 
 use pai::{
-	api::messages::{Event, Stopped},
-	syscalls::SyscallItem,
+	api::messages::{Event, Stopped, SyscallItem},
 	utils::process::Tid,
 };
 use serde::{Deserialize, Serialize};
