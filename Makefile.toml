@@ -8,9 +8,6 @@ extend = [
 	# Publish new crate on crates.io [publish|publishdry]
 	{ path = "pai-make-targets/publish.toml" },
 
-	# Test [test]
-	{ path = "pai-make-targets/test.toml" },
-
 	# Create a new release
 	{ path = "pai-make-targets/createrelease.toml" },
 ]
@@ -24,8 +21,23 @@ env = { OUTNAME = "pai-strace" }
 
 [tasks.uploadrelease]
 dependencies = [
+	{ name = "test" },
 	{ name = "publish" },
 	{ name = "createzips" },
 ]
 command = "gh"
 args = [ "release", "create", "--prerelease", "--generate-notes", "--draft", "v${CARGO_MAKE_CRATE_VERSION}", "./release/${CARGO_MAKE_CRATE_VERSION}/*.zip" ]
+
+# Some basic tests to make sure we don't have any fatal errors
+[tasks.test1]
+command = "cargo"
+args = ["run", "--", "-q", "-o", "/dev/null", "--format", "raw", "--format", "json", "id"]
+[tasks.test2]
+command = "cargo"
+args = ["run", "--", "-q", "-o", "/dev/null", "--format", "raw", "--format", "json", "--enrich", "basic", "ls"]
+[tasks.test3]
+command = "cargo"
+args = ["run", "--", "-q", "-o", "/dev/null", "--format", "raw", "--format", "json", "--enrich", "full", "true"]
+
+[tasks.test]
+dependencies = ["test1", "test2", "test3"]

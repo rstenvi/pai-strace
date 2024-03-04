@@ -62,8 +62,11 @@ pub struct Args {
 	#[arg(short, long)]
 	pub attach: bool,
 
-	/// Print output to file
-	#[arg(short, long)]
+	/// Print output to file. Normal behaviour is to append `.txt` or `.json` to
+	/// the filename. Exception is when the path already exists, in that case we
+	/// write directly to the path. This is necessary to be aware of when having
+	/// multiple `--format` flags.
+	#[arg(short, long, verbatim_doc_comment)]
 	pub output: Option<PathBuf>,
 
 	/// Attach to any new forked processes

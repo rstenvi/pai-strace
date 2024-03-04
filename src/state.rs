@@ -1,4 +1,9 @@
-use std::{collections::HashMap, fs::File, io::Write, path::PathBuf};
+use std::{
+	collections::HashMap,
+	fs::{File, OpenOptions},
+	io::Write,
+	path::PathBuf,
+};
 
 use pai::{
 	api::messages::{Event, Stopped, SyscallItem},
@@ -39,9 +44,19 @@ impl State {
 		if let Some(path) = path {
 			assert!(!path.is_dir());
 			let mut path = path.clone();
-			path.set_extension(ext);
-			log::info!("creating file {path:?}");
-			let r = Box::new(File::create(path).expect("Can't create file"));
+			log::debug!("input file {path:?}");
+			if !path.exists() {
+				path.set_extension(ext);
+			}
+			log::info!("writing to {path:?}");
+			let file = OpenOptions::new()
+				.write(true)
+				.create(true)
+				.truncate(true)
+				.open(path)
+				.expect("Can't create output file");
+
+			let r = Box::new(file);
 			r as Box<dyn Write>
 		} else {
 			Self::get_stdout()
