@@ -19,8 +19,9 @@ dependencies = ["update"]
 [tasks.createzips]
 env = { OUTNAME = "pai-strace" }
 
-[tasks.uploadrelease]
+[tasks.publishrelease]
 dependencies = [
+	{ name = "update" },
 	{ name = "test" },
 	{ name = "publish" },
 	{ name = "createzips" },
