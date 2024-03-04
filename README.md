@@ -13,6 +13,9 @@ To check if a new version is available:
 pai-strace --check-update
 ~~~
 
+To use on target where `cargo` is not installed, please see
+[releases](https://github.com/rstenvi/pai-strace/releases).
+
 ## Development status
 
 In development, expect some bugs.

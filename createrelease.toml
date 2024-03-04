@@ -42,7 +42,7 @@ done
 
 [tasks.releases]
 run_task = [
-    { name = ["release1", "release3", "release3", "release4", "post-releases"] },
+    { name = ["release1", "release2", "release3", "release4", "post-releases"] },
 ]
 
 [tasks.createzips]
