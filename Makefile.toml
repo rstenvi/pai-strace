@@ -1,56 +1,31 @@
-[tasks.build]
-command = "cross"
-args = ["build", "--target-dir=output", "--target=${@}"]
+extend = [
+	# Build debug and release build [build|release]
+	{ path = "pai-make-targets/build.toml" },
 
-[tasks.release]
-command = "cross"
-dependencies = ["update"]
-args = ["build", "--frozen", "--target-dir=output", "--release", "--target=${@}"]
+	# Fix formatting and clippy [fix|fixfmt|fixclippy|update|clippy]
+	{ path = "pai-make-targets/fix.toml" },
 
+	# Publish new crate on crates.io [publish|publishdry]
+	{ path = "pai-make-targets/publish.toml" },
 
-[tasks.fixfmt]
-install_crate = "rustfmt"
-command = "cargo"
-args = ["fmt", "--", "--emit=files"]
+	# Test [test]
+	{ path = "pai-make-targets/test.toml" },
 
-[tasks.fixclippy]
-command = "cargo"
-install_crate = "clippy"
-args = ["clippy", "--no-deps", "--all-targets", "--all-features", "--fix"]
-
-[tasks.releasecheck]
-dependencies = ["fixclippy", "fixfmt", "update"]
-
-[tasks.createzips]
-dependencies = [
-	{ name = "releasecheck" },
-	{ name = "createzips", path = "createrelease.toml" },
+	# Create a new release
+	{ path = "pai-make-targets/createrelease.toml" },
 ]
 
-[tasks.githubrelease]
+# Always update dependencies before a release build
+[tasks.release]
+dependencies = ["update"]
+
+[tasks.createzips]
+env = { OUTNAME = "pai-strace" }
+
+[tasks.uploadrelease]
 dependencies = [
-	{ name = "releasecheck" },
 	{ name = "publish" },
-	{ name = "createzips", path = "createrelease.toml" },
+	{ name = "createzips" },
 ]
 command = "gh"
 args = [ "release", "create", "--prerelease", "--generate-notes", "--draft", "v${CARGO_MAKE_CRATE_VERSION}", "./release/${CARGO_MAKE_CRATE_VERSION}/*.zip" ]
-
-
-[tasks.update]
-command = "cargo"
-args = ["update"]
-
-[tasks.publish]
-dependencies = ["releasecheck"]
-command = "cargo"
-args = ["publish"]
-
-[tasks.publishdry]
-extend = "publish"
-args = ["publish", "--dry-run"]
-
-[tasks.clippy]
-command = "cargo"
-install_crate = "clippy"
-args = ["clippy", "--no-deps", "--all-targets", "--all-features"]
