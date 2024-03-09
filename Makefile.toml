@@ -12,13 +12,6 @@ extend = [
 	{ path = "pai-make-targets/createrelease.toml" },
 ]
 
-# Always update dependencies before a release build
-[tasks.release]
-dependencies = ["update"]
-
-[tasks.createzips]
-env = { OUTNAME = "pai-strace" }
-
 [tasks.publishrelease]
 dependencies = [
 	{ name = "update" },

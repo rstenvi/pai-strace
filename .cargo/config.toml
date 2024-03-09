@@ -1,0 +1,7 @@
+[target.riscv64gc-unknown-linux-gnu]
+linker = "riscv64-linux-gnu-gcc"
+
+[target.mips-unknown-linux-gnu]
+# linker = "./zig/mips-musl.sh"
+linker = "../pai/scripts/toolchain/host/bin/mips-buildroot-linux-gnu-gcc"
+rustflags = ["-C", "opt-level=1",]
