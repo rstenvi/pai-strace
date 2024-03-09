@@ -63,8 +63,7 @@ impl State {
 		}
 	}
 	fn get_writers(
-		format: &[Format],
-		output: &Option<PathBuf>,
+		format: &[Format], output: &Option<PathBuf>,
 	) -> anyhow::Result<HashMap<Format, Box<dyn SysWrite>>> {
 		let mut writers = HashMap::new();
 		for format in format.iter() {
