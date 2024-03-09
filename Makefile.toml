@@ -12,6 +12,9 @@ extend = [
 	{ path = "pai-make-targets/createrelease.toml" },
 ]
 
+[tasks.createzips]
+env = { OUTNAME = "pai-strace" }
+
 [tasks.publishrelease]
 dependencies = [
 	{ name = "update" },
