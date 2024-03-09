@@ -113,7 +113,7 @@ impl State {
 		}
 	}
 	fn init_writer_tid(&mut self, tid: Tid) -> anyhow::Result<()> {
-		if self.args.file_per_thread && self.tid_writers.get(&tid).is_none() {
+		if self.args.file_per_thread && !self.tid_writers.contains_key(&tid) {
 			let mut hins = HashMap::new();
 			for format in self.args.format.iter() {
 				let mut ins = match format {
