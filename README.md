@@ -4,12 +4,13 @@ A strace-like tool created using [pai](https://github.com/rstenvi/pai)
 
 ## Install
 
-~~~
+~~~{.bash}
 cargo install --force pai-strace
 ~~~
 
 To check if a new version is available:
-~~~
+
+~~~{.bash}
 pai-strace --check-update
 ~~~
 
@@ -29,30 +30,27 @@ compiling for host target.
 
 The command to build targets are:
 
-~~~
-cargo make [build|release] [target(s)]
+~~~{.bash}
+cargo make [build|release] [target]
 ~~~
 
 The output will be placed in `output/<target>/<debug|release>/pai-strace`
 
 If you don't specify any target it will be under `output/<debug|release>/pai-strace`
 
-**Some other useful make targets**
+### Cross-compile
 
-- `cargo make clippy`
-  -  Should be run before every commit
-- `cargo make publish`
-  - Publish new version on crates.io
-- `cargo make release [target1 target2 targetN]`
-  - Build release version for given targets
-- `cargo make releasecheck`
-  - Run dependencies for `publish` and `release` targets without releasing or
-    publishing anything.
-  - Will not run with uncommited changes so not necessary to run this before
-    commit
-- `cargo make update`
-  - Update all dependencies in `Cargo.lock`
-  - This is part of `releasecheck`
+Cross-compilation is sometimes as easy as described above, like this example for
+Android:
+
+~~~{.bash}
+$ cargo make release aarch64-linux-android
+$ ls output/aarch64-linux-android/release/pai-strace
+output/aarch64-linux-android/release/pai-strace
+~~~
+
+Not all targets are supported in `cross` in those cases, we need to find an
+appropriate linker.
 
 ## How to use
 
@@ -68,7 +66,7 @@ pai-strace true
 Below is an example which writes both raw format and json format to files,
 `calls.txt` and `calls.json`, respectively.
 
-~~~
+~~~{.bash}
 pai-strace --format json --format raw --output calls true
 ~~~
 
@@ -80,7 +78,7 @@ In the following previous example you might have seen, something like:
 
 This doesn't give much information about how the file is opened. To provide some more contexts, we can provide the `--enrich` argument.
 
-~~~
+~~~{.bash}
 pai-strace --enrich basic true
 ~~~
 
@@ -94,7 +92,7 @@ Now we can see that the file descriptor is a constant and the names of the flags
 
 We still don't know the filename however, to read pointers we can pass the `--enrich full` argument
 
-~~~
+~~~{.bash}
 pai-strace --enrich full true
 ~~~
 
